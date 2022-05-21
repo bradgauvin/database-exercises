@@ -122,14 +122,54 @@ JOIN salaries as t4 on t4.emp_no = t1.emp_no
 ORDER BY salary DESC
 LIMIT 1;
 
-## Determine the average salary for each department. Use all salary information and round your results.
+## 10. Determine the average salary for each department. Use all salary information and round your results.
+USE employees;
+
+SELECT
+	d.dept_name, ROUND(AVG(s.salary), 2) AS avg_salary
+FROM 
+	departments AS d
+JOIN
+	dept_emp AS de on d.dept_no = de.dept_no
+JOIN 
+	employees AS e on de.emp_no = e.emp_no
+JOIN
+	salaries as s on e.emp_no = s.emp_no
+GROUP BY d.dept_name
+ORDER BY avg_salary DESC;
+
+## 11. Bonus Find the names of all current employees, their department name, and their current manager's name.
+SELECT
+	dm.dept_no,
+	d.dept_name AS Department_name,
+    CONCAT(e.first_name,' ',e.last_name) AS Manager
+FROM employees as e
+JOIN dept_manager as dm on dm.emp_no = e.emp_no
+	AND dm.to_date > NOW()
+JOIN departments as d on d.dept_no = dm.dept_no
+ORDER BY Department_name;
 
 
-
-  
-
+Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(e.first_name,' ',e.last_name) AS manager FROM employees AS e JOIN dept_manager ' at line 3
 
 
+SELECT 
+	CONCAT(e.first_name,' ',e.last_name) AS 'Employee_Name',
+    d.dept_name AS 'Department_Name',
+    m.managers AS 'Manager_Name'
+FROM employees AS e
+JOIN dept_emp AS de ON de.emp_no = e.emp_no
+	AND de.to_date > NOW()
+JOIN departments AS d ON d.dept_no = de.dept_no
+JOIN (SELECT
+		dm.dept_no,
+		CONCAT(e.first_name,' ',e.last_name) AS managers
+	  FROM employees as e
+	  JOIN dept_manager as dm ON e.emp_no = dm.emp_no
+			AND to_date > NOW() AS m ON m.dept_no = d.dept_no
+ORDER BY d.dept_name;
+
+Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'the manual that corresponds to your MySQL server version for the right syntax to' at line 1
 
 
 
