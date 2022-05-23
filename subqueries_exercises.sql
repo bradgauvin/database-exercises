@@ -29,7 +29,6 @@ JOIN dept_emp USING (emp_no)
 WHERE first_name = "Aamod"
 AND to_date>NOW();
 
-
 ## code for full answer
 SELECT 
 	title
@@ -55,9 +54,9 @@ From employees
 WHERE emp_no not IN (
 	Select emp_no
 	FROM dept_emp
-	WHERE to_date < now()
+	WHERE to_date > now()
 );
-## 214,916 employees no longer at organization
+## 59,900 employees no longer at organization
 
 ## 4. Find all the current department managers that are female. List their names in a comment in your code.
 SELECT emp_no
@@ -167,5 +166,32 @@ Group BY perc_emp;
 ##BONUS
 
 ## Find all the department names that currently have female managers.
+Select emp_no
+From employees
+WHERE gender = 'F';
+
+Select dept_name
+FROM departments d
+JOIN dept_manager dm ON dm.dept_no = d.dept_no
+WHERE emp_no IN (
+	Select emp_no
+	From employees
+	WHERE gender = 'F')
+AND to_date>NOW();
+
+## JOIN dept_manager AS dm ON dm.dept_no = d.dept_no - Including the "AS" wouldn't work why? 
+
 ##Find the first and last name of the employee with the highest salary.
+SELECT MAX(salary)
+FROM salaries;
+
+
+SELECT first_name, last_name
+from employees 
+where emp_no IN (
+SELECT emp_no
+FROM salaries
+WHERE salary >=(SELECT max(salary)
+FROM salaries));
+
 ##Find the department name that the employee with the highest salary works in.
